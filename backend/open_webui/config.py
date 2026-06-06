@@ -601,7 +601,7 @@ You have access to a Python code interpreter via: `<code_interpreter type="code"
 - After obtaining output, **provide a concise analysis, interpretation, or next steps** to help the user understand the findings.
 - If results are unclear or unexpected, refine the code and re-execute. Iterate until you deliver meaningful insights.
 - **If a link to an image, audio, or any file appears in the output, display it exactly as-is** in your response so the user can access it. Do not modify the link.
-- Respond in the chat's primary language. Default to English if multilingual.
+- Respond in the chat's primary language. Use o português do Brasil como padrão se multilíngue.
 
 Ensure the code interpreter is effectively utilized to achieve the highest-quality analysis for the user."""
 
@@ -2511,7 +2511,7 @@ ENABLE_PASSWORD_AUTH = os.getenv('ENABLE_PASSWORD_AUTH', 'True').lower() == 'tru
 DEFAULT_LOCALE = ConfigVar(
     'DEFAULT_LOCALE',
     'ui.default_locale',
-    os.getenv('DEFAULT_LOCALE', ''),
+    os.getenv('DEFAULT_LOCALE', 'pt-BR'),
 )
 
 DEFAULT_MODELS = ConfigVar('DEFAULT_MODELS', 'ui.default_models', os.getenv('DEFAULT_MODELS', None))
@@ -3109,7 +3109,7 @@ Generate a concise, 3-5 word title with an emoji summarizing the chat history.
 ### Guidelines:
 - The title should clearly represent the main theme or subject of the conversation.
 - Use emojis that enhance understanding of the topic, but avoid quotation marks or special formatting.
-- Write the title in the chat's primary language; default to English if multilingual.
+- Write the title in the chat's primary language; use o português do Brasil como padrão se multilíngue.
 - Prioritize accuracy over excessive creativity; keep it clear and simple.
 - Your entire response must consist solely of the JSON object, without any introductory or concluding text.
 - The output must be a single, raw JSON object, without any markdown code fences or other encapsulating text.
@@ -3141,7 +3141,7 @@ Generate 1-3 broad tags categorizing the main themes of the chat history, along 
 - Start with high-level domains (e.g. Science, Technology, Philosophy, Arts, Politics, Business, Health, Sports, Entertainment, Education)
 - Consider including relevant subfields/subdomains if they are strongly represented throughout the conversation
 - If content is too short (less than 3 messages) or too diverse, use only ["General"]
-- Use the chat's primary language; default to English if multilingual
+- Use the chat's primary language; use o português do Brasil como padrão se multilíngue
 - Prioritize accuracy over specificity
 
 ### Output:
@@ -3164,7 +3164,7 @@ Generate a detailed prompt for am image generation task based on the given langu
 ### Guidelines:
 - Be descriptive and detailed, focusing on the most important aspects of the image.
 - Avoid making assumptions or adding information not present in the image.
-- Use the chat's primary language; default to English if multilingual.
+- Use the chat's primary language; use o português do Brasil como padrão se multilíngue.
 - If the image is too complex, focus on the most prominent elements.
 
 ### Output:
@@ -3192,7 +3192,7 @@ Suggest 3-5 relevant follow-up questions or prompts that the user might naturall
 - Make questions concise, clear, and directly related to the discussed topic(s).
 - Only suggest follow-ups that make sense given the chat content and do not repeat what was already covered.
 - If the conversation is very short or not specific, suggest more general (but relevant) follow-ups the user might ask.
-- Use the conversation's primary language; default to English if multilingual.
+- Use the conversation's primary language; use o português do Brasil como padrão se multilíngue.
 - Response must be a JSON object with a "follow_ups" key containing an array of strings, no extra text or formatting.
 ### Output:
 JSON format: { "follow_ups": ["Question 1?", "Question 2?", "Question 3?"] }

@@ -1,6 +1,6 @@
 # Mangaba AI — Desktop App (Mac & Windows)
 
-Interface de chat com IA baseada no Open WebUI, com identidade visual Mangaba AI.
+Interface de chat com IA baseada no Mangaba AI, com identidade visual Mangaba AI.
 
 ## Opção 1: Electron (recomendado — funciona agora)
 

@@ -8,12 +8,12 @@
 
 ### Note to first-time contributors: Please open a discussion post in [Discussions](https://github.com/open-webui/open-webui/discussions) to discuss your idea/fix with the community before creating a pull request, and describe your changes before submitting a pull request.
 
-This is to ensure large feature PRs are discussed with the community first, before starting work on it. If the community does not want this feature or it is not relevant for Open WebUI as a project, it can be identified in the discussion before working on the feature and submitting the PR.
+This is to ensure large feature PRs are discussed with the community first, before starting work on it. If the community does not want this feature or it is not relevant for Mangaba AI as a project, it can be identified in the discussion before working on the feature and submitting the PR.
 
 <!--
 ### ⚠️ Important: Your PR is a contribution, not a guarantee of merge.
 
-The most impactful way to contribute to Open WebUI is through well-written bug reports, detailed feature discussions, and thoughtful ideas. These directly shape the project. If you do open a pull request, please know that Open WebUI is held to the highest standard of code quality, consistency, and architectural coherence, and every line merged becomes something the core team must own, maintain, and support indefinitely. Submitted code may be refactored, rewritten, or used as inspiration for a different implementation. This is not a reflection of your work's quality. It is how we ensure that a small team can deeply understand and evolve every part of the codebase.
+The most impactful way to contribute to Mangaba AI is through well-written bug reports, detailed feature discussions, and thoughtful ideas. These directly shape the project. If you do open a pull request, please know that Mangaba AI is held to the highest standard of code quality, consistency, and architectural coherence, and every line merged becomes something the core team must own, maintain, and support indefinitely. Submitted code may be refactored, rewritten, or used as inspiration for a different implementation. This is not a reflection of your work's quality. It is how we ensure that a small team can deeply understand and evolve every part of the codebase.
 -->
 
 **Before submitting, make sure you've checked the following:**
@@ -22,7 +22,7 @@ The most impactful way to contribute to Open WebUI is through well-written bug r
 - [ ] **Target branch:** The pull request targets the `dev` branch. **PRs targeting `main` will be immediately closed.**
 - [ ] **Description:** A concise description of the changes is provided below.
 - [ ] **Changelog:** A changelog entry following [Keep a Changelog](https://keepachangelog.com/) format is included at the bottom.
-- [ ] **Documentation:** Relevant documentation has been added or updated in the [Open WebUI Docs Repository](https://github.com/open-webui/docs).
+- [ ] **Documentation:** Relevant documentation has been added or updated in the [Mangaba AI Docs Repository](https://github.com/open-webui/docs).
 - [ ] **Dependencies:** Any new or updated dependencies are explained, tested, and documented.
 - [ ] **Testing:** Manual tests have been performed to verify the fix/feature works correctly and does not introduce regressions. Screenshots or recordings are included where applicable.
 - [ ] **No Unchecked AI Code:** This PR is either human-written or has undergone thorough human review AND manual testing. Unreviewed AI-generated PRs may be closed immediately.
