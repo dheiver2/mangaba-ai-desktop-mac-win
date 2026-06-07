@@ -371,7 +371,8 @@ OLLAMA_API_CONFIGS = ConfigVar(
 ENABLE_OPENAI_API = ConfigVar(
     'ENABLE_OPENAI_API',
     'openai.enable',
-    os.getenv('ENABLE_OPENAI_API', 'True').lower() == 'true',
+    # Mangaba AI usa somente Ollama por padrão
+    os.getenv('ENABLE_OPENAI_API', 'False').lower() == 'true',
 )
 
 
@@ -2514,7 +2515,8 @@ DEFAULT_LOCALE = ConfigVar(
     os.getenv('DEFAULT_LOCALE', 'pt-BR'),
 )
 
-DEFAULT_MODELS = ConfigVar('DEFAULT_MODELS', 'ui.default_models', os.getenv('DEFAULT_MODELS', None))
+# Mangaba AI usa o Gemma 4 edge (quantizado, on-device) via Ollama por padrão
+DEFAULT_MODELS = ConfigVar('DEFAULT_MODELS', 'ui.default_models', os.getenv('DEFAULT_MODELS', 'gemma4:e4b'))
 
 DEFAULT_PINNED_MODELS = ConfigVar(
     'DEFAULT_PINNED_MODELS',

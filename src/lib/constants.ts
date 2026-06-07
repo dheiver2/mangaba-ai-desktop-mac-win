@@ -3,7 +3,9 @@ import { browser, dev } from '$app/environment';
 
 export const APP_NAME = 'Mangaba AI';
 
-export const WEBUI_HOSTNAME = browser ? (dev ? `${location.hostname}:8080` : ``) : '';
+// Em dev usa 127.0.0.1 (IPv4) para casar com o backend, evitando o problema
+// de localhost resolver para IPv6 (::1) onde o backend não escuta.
+export const WEBUI_HOSTNAME = browser ? (dev ? `127.0.0.1:8888` : ``) : '';
 export const WEBUI_BASE_URL = browser ? (dev ? `http://${WEBUI_HOSTNAME}` : ``) : ``;
 export const WEBUI_API_BASE_URL = `${WEBUI_BASE_URL}/api/v1`;
 

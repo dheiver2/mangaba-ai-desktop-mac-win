@@ -4,9 +4,10 @@ const { spawn } = require('child_process');
 const http = require('http');
 const fs = require('fs');
 
-const BACKEND_PORT = 8080;
+const BACKEND_PORT = 8888;
 const FRONTEND_PORT = process.env.NODE_ENV === 'development' ? 5173 : 8080;
-const APP_URL = `http://localhost:${FRONTEND_PORT}`;
+// Permite sobrescrever a URL via env (ex: MANGABA_URL=http://localhost:5173)
+const APP_URL = process.env.MANGABA_URL || `http://localhost:${FRONTEND_PORT}`;
 
 let mainWindow = null;
 let tray = null;
@@ -24,7 +25,7 @@ function createWindow() {
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
     trafficLightPosition: { x: 16, y: 16 },
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
       nodeIntegration: false,
     },

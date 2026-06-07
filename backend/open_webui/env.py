@@ -772,7 +772,7 @@ WEBUI_NAME = os.getenv('WEBUI_NAME', 'Mangaba AI')
 if WEBUI_NAME != 'Mangaba AI':
     WEBUI_NAME += ' (Mangaba AI)'
 
-WEBUI_FAVICON_URL = 'https://openwebui.com/favicon.png'
+WEBUI_FAVICON_URL = '/static/favicon.svg'
 WEBUI_BUILD_HASH = os.getenv('WEBUI_BUILD_HASH', 'dev-build')
 TRUSTED_SIGNATURE_KEY = os.getenv('TRUSTED_SIGNATURE_KEY', '')
 

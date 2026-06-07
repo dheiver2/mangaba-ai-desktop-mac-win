@@ -5,6 +5,12 @@ node_modules
 /build
 /.svelte-kit
 /package
+
+# Mangaba AI — artefatos desktop
+/dist-electron
+/src-tauri/target
+.claude/
+*.log
 .env
 .env.*
 !.env.example

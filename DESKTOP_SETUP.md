@@ -2,11 +2,37 @@
 
 Interface de chat com IA baseada no Mangaba AI, com identidade visual Mangaba AI.
 
-## Opção 1: Electron (recomendado — funciona agora)
+## Motor de IA: Ollama + Gemma 4 edge (quantizado)
+
+O Mangaba AI roda **100% local** usando o Ollama com o modelo **`gemma4:e4b`**
+(Gemma 4 edge, otimizado e quantizado para rodar on-device — ~9.6 GB). Não há
+conexões externas; todos os dados ficam na máquina.
+
+```bash
+# Instalar Ollama (Mac)
+brew install ollama
+ollama serve            # inicia o serviço
+
+# Baixar o modelo Gemma 4 quantizado (só na 1ª vez)
+ollama pull gemma4:e4b
+```
+
+O `start-desktop.sh` já faz isso automaticamente: sobe o Ollama e baixa o
+modelo se ainda não existir.
+
+### Variantes do Gemma 4 (edite `MANGABA_MODEL` no start-desktop.sh)
+
+| Modelo          | Tamanho | Uso                        |
+|-----------------|---------|----------------------------|
+| `gemma4:e2b`    | 7.2 GB  | Máquinas mais leves        |
+| `gemma4:e4b` ✅ | 9.6 GB  | **Padrão — edge equilíbrio** |
+| `gemma4:12b`    | 7.6 GB  | Mais qualidade             |
+| `gemma4:26b`    | 18 GB   | MoE, alta qualidade        |
 
 ### Pré-requisitos
 - Node.js 18+
 - Python 3.11+
+- Ollama (com `gemma4:e4b`)
 
 ### Instalar dependências desktop
 
