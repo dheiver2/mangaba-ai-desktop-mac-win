@@ -276,7 +276,16 @@
 								}}
 							>
 								<div class="mb-1">
-									<div class=" text-2xl font-medium">
+									<!-- Logo Mangaba AI (asset do frontend, sempre disponível) -->
+									<div class="flex justify-center mb-4">
+										<img
+											src="/mangaba-logo.svg"
+											alt="Mangaba AI"
+											class="w-24 h-24 rounded-2xl shadow-lg"
+											draggable="false"
+										/>
+									</div>
+									<div class=" text-2xl font-medium text-center">
 										{#if $config?.onboarding ?? false}
 											{$i18n.t(`Get started with {{WEBUI_NAME}}`, { WEBUI_NAME: $WEBUI_NAME })}
 										{:else if mode === 'ldap'}
@@ -394,14 +403,14 @@
 									{#if $config?.features.enable_login_form || $config?.features.enable_ldap || form}
 										{#if mode === 'ldap'}
 											<button
-												class="bg-gray-700/5 hover:bg-gray-700/10 dark:bg-gray-100/5 dark:hover:bg-gray-100/10 dark:text-gray-300 dark:hover:text-white transition w-full rounded-full font-medium text-sm py-2.5"
+												class="bg-[#FF7A1A] hover:bg-[#E94A12] text-white transition w-full rounded-full font-medium text-sm py-2.5 shadow-md shadow-[#FF7A1A]/30"
 												type="submit"
 											>
 												{$i18n.t('Authenticate')}
 											</button>
 										{:else}
 											<button
-												class="bg-gray-700/5 hover:bg-gray-700/10 dark:bg-gray-100/5 dark:hover:bg-gray-100/10 dark:text-gray-300 dark:hover:text-white transition w-full rounded-full font-medium text-sm py-2.5"
+												class="bg-[#FF7A1A] hover:bg-[#E94A12] text-white transition w-full rounded-full font-medium text-sm py-2.5 shadow-md shadow-[#FF7A1A]/30"
 												type="submit"
 											>
 												{mode === 'signin'
@@ -613,10 +622,9 @@
 					<div class=" self-center">
 						<img
 							id="logo"
-							crossorigin="anonymous"
-							src="{WEBUI_BASE_URL}/static/favicon.png"
+							src="/mangaba-logo.svg"
 							class=" w-6 rounded-full"
-							alt=""
+							alt="Mangaba AI"
 						/>
 					</div>
 				</div>
