@@ -1,0 +1,90 @@
+/* ==========================================================================
+   Mangaba AI — Tema refinado (nível ChatGPT/Claude Desktop)
+   Polimento visual: tipografia, espaçamento, cores da marca, suavidade.
+   ========================================================================== */
+
+:root {
+  --mangaba-primary: #FF7A1A;
+  --mangaba-primary-hover: #E94A12;
+  --mangaba-green: #689924;
+  --mangaba-cream: #FFFCF0;
+  --mangaba-ink: #2B211B;
+}
+
+/* ---- Tipografia e suavização (sensação nativa) ---- */
+html, body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+  letter-spacing: -0.011em;
+}
+
+/* ---- Scrollbar discreta e elegante ---- */
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(120,110,100,0.28);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(120,110,100,0.45); background-clip: padding-box; }
+
+/* ---- Acentos da marca: foco, links, seleção ---- */
+::selection { background: rgba(255,122,26,0.22); }
+
+*:focus-visible {
+  outline: 2px solid var(--mangaba-primary) !important;
+  outline-offset: 1px;
+  border-radius: 8px;
+}
+
+/* ---- Botões primários: laranja Mangaba com profundidade sutil ---- */
+button.bg-black,
+button.bg-gray-900,
+button[type="submit"].bg-black {
+  background: var(--mangaba-primary) !important;
+  color: #fff !important;
+  box-shadow: 0 1px 2px rgba(233,74,18,0.25), 0 4px 14px rgba(255,122,26,0.18);
+  transition: background .18s ease, transform .12s ease, box-shadow .18s ease;
+}
+button.bg-black:hover,
+button.bg-gray-900:hover {
+  background: var(--mangaba-primary-hover) !important;
+  transform: translateY(-1px);
+}
+button.bg-black:active { transform: translateY(0); }
+
+/* ---- Campo de entrada do chat ---- */
+#chat-input,
+.chat-input,
+[id^="chat-input"] {
+  font-size: 15px !important;
+  line-height: 1.55 !important;
+}
+form.relative.w-full { border-radius: 22px; }
+
+/* ---- Mensagens: respiro e leitura confortável ---- */
+.markdown-prose, .prose {
+  line-height: 1.7;
+  font-size: 15px;
+}
+.markdown-prose p { margin: 0.55em 0; }
+.markdown-prose pre, .prose pre {
+  border-radius: 14px;
+  border: 1px solid rgba(120,110,100,0.15);
+}
+
+/* ---- Transições globais suaves ---- */
+a, button, .cursor-pointer, [role="button"] {
+  transition: color .15s ease, background-color .15s ease, opacity .15s ease, transform .12s ease;
+}
+
+/* ---- Cantos arredondados consistentes ---- */
+.rounded-xl { border-radius: 16px !important; }
+.rounded-2xl { border-radius: 20px !important; }
+
+/* ---- Tema claro: fundo creme quentinho (identidade Mangaba) ---- */
+html.light body, html.light .app { background-color: var(--mangaba-cream); }
+html.light #sidebar, html.light nav#sidebar { background-color: #FFF7EC; }

@@ -2532,31 +2532,28 @@ except Exception as e:
 if default_prompt_suggestions == []:
     default_prompt_suggestions = [
         {
-            'title': ['Me ajude a estudar', 'vocabulário para o vestibular'],
-            'content': 'Me ajude a estudar vocabulário: escreva uma frase com uma lacuna para eu preencher, e eu tento escolher a opção correta.',
+            'title': ['Analisar meu fluxo de caixa', 'identificar riscos e melhorias'],
+            'content': 'Quero organizar e analisar o fluxo de caixa do meu negócio. Comece me perguntando os números essenciais (entradas, saídas e saldo) e depois me ajude a identificar riscos e oportunidades de melhoria.',
         },
         {
-            'title': ['Me dê ideias', 'do que fazer com os desenhos das crianças'],
-            'content': 'Quais são 5 coisas criativas que eu poderia fazer com os desenhos dos meus filhos? Não quero jogá-los fora, mas também acumulam bastante.',
+            'title': ['Precificar meu produto/serviço', 'com margem saudável'],
+            'content': 'Me ajude a definir o preço de um produto ou serviço. Pergunte meus custos, despesas e margem desejada, e calcule um preço de venda saudável passo a passo.',
         },
         {
-            'title': ['Me conte uma curiosidade', 'sobre o Império Romano'],
-            'content': 'Me conte uma curiosidade aleatória sobre o Império Romano.',
+            'title': ['Criar um plano de negócios', 'enxuto e prático'],
+            'content': 'Quero criar um plano de negócios enxuto para a minha empresa. Conduza por etapas: proposta de valor, público, concorrência, finanças e próximos passos.',
         },
         {
-            'title': ['Mostre um trecho de código', 'de um cabeçalho fixo de site'],
-            'content': 'Mostre um trecho de código de um cabeçalho fixo (sticky header) de site em CSS e JavaScript.',
+            'title': ['Plano de marketing e vendas', 'para atrair mais clientes'],
+            'content': 'Me ajude a montar um plano simples de marketing e vendas para atrair mais clientes, considerando meu orçamento e o perfil do meu público.',
         },
         {
-            'title': [
-                'Explique opções (derivativos)',
-                'considerando que já compro e vendo ações',
-            ],
-            'content': 'Explique o mercado de opções em termos simples, considerando que já estou familiarizado com comprar e vender ações.',
+            'title': ['Organizar a gestão de pessoas', 'metas e produtividade da equipe'],
+            'content': 'Quero melhorar a gestão da minha equipe. Me ajude a definir metas claras, indicadores de produtividade e uma rotina de acompanhamento.',
         },
         {
-            'title': ['Vencer a procrastinação', 'me dê dicas'],
-            'content': 'Você pode começar me perguntando sobre as situações em que mais procrastino e depois me dar algumas sugestões para superar isso?',
+            'title': ['Formalizar meu negócio', 'MEI, Simples e obrigações'],
+            'content': 'Quero entender como formalizar meu negócio no Brasil. Explique de forma simples MEI, Simples Nacional e as principais obrigações, e me ajude a escolher o melhor caminho.',
         },
     ]
 
