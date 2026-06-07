@@ -3,6 +3,10 @@ const path = require('path');
 const { spawn } = require('child_process');
 const http = require('http');
 const fs = require('fs');
+const ollama = require('./ollama-manager.cjs');
+
+// Modelo padrão do Mangaba AI (Gemma 4 edge quantizado)
+const MANGABA_MODEL = process.env.MANGABA_MODEL || 'gemma4:e4b';
 
 const BACKEND_PORT = 8888;
 const FRONTEND_PORT = process.env.NODE_ENV === 'development' ? 5173 : 8080;
@@ -12,11 +16,6 @@ const APP_URL = process.env.MANGABA_URL || `http://localhost:${FRONTEND_PORT}`;
 let mainWindow = null;
 let tray = null;
 let backendProcess = null;
-let ollamaProcess = null;
-let ollamaStartedByUs = false; // só encerramos o Ollama se fomos nós que o iniciamos
-
-const OLLAMA_PORT = 11434;
-const OLLAMA_URL = `http://127.0.0.1:${OLLAMA_PORT}`;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -125,6 +124,46 @@ function buildAppMenu() {
         ]),
       ],
     },
+    {
+      label: 'Ollama',
+      submenu: [
+        {
+          label: `Baixar/atualizar modelo (${MANGABA_MODEL})`,
+          click: async () => {
+            try {
+              await ollama.pull(MANGABA_MODEL);
+            } catch (e) {
+              console.warn('[ollama] pull falhou:', e.message);
+            }
+          },
+        },
+        { type: 'separator' },
+        {
+          label: 'Desinstalar Ollama e modelos',
+          click: async () => {
+            const { dialog } = require('electron');
+            const r = await dialog.showMessageBox(mainWindow, {
+              type: 'warning',
+              buttons: ['Cancelar', 'Desinstalar'],
+              defaultId: 0,
+              cancelId: 0,
+              message: 'Desinstalar o Ollama?',
+              detail:
+                'Isso remove o Ollama e TODOS os modelos baixados pelo Mangaba AI. ' +
+                'O app deixará de responder até baixar tudo novamente.',
+            });
+            if (r.response === 1) {
+              ollama.uninstall();
+              dialog.showMessageBox(mainWindow, {
+                type: 'info',
+                message: 'Ollama desinstalado.',
+                detail: 'Reabra o Mangaba AI para reinstalar automaticamente.',
+              });
+            }
+          },
+        },
+      ],
+    },
   ];
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
@@ -147,64 +186,37 @@ function waitForBackend(retries = 30, delay = 1000) {
   });
 }
 
-// Verifica se o Ollama já está respondendo
-function isOllamaUp() {
-  return new Promise((resolve) => {
-    http
-      .get(`${OLLAMA_URL}/api/tags`, () => resolve(true))
-      .on('error', () => resolve(false));
-  });
-}
-
-// Aguarda o Ollama subir (até retries tentativas)
-function waitForOllama(retries = 30, delay = 1000) {
-  return new Promise((resolve, reject) => {
-    const attempt = async () => {
-      if (await isOllamaUp()) return resolve();
-      if (retries-- > 0) setTimeout(attempt, delay);
-      else reject(new Error('Ollama não iniciou no tempo esperado'));
-    };
-    attempt();
-  });
-}
-
-// Inicia o Ollama caso ainda não esteja rodando — o app passa a ser o dono dele
+// Inicia o Ollama gerenciado pelo app (instala na 1ª vez) e garante o modelo.
 async function startOllama() {
-  if (await isOllamaUp()) {
-    console.log('[ollama] já estava rodando — não será encerrado ao sair');
-    return;
-  }
   try {
-    ollamaProcess = spawn('ollama', ['serve'], {
-      env: { ...process.env },
-      detached: false,
+    await ollama.start((msg) => console.log('[ollama]', msg));
+    // Garante que o modelo padrão está disponível
+    const hasModel = await new Promise((resolve) => {
+      http
+        .get(`${ollama.OLLAMA_URL}/api/tags`, (res) => {
+          let data = '';
+          res.on('data', (c) => (data += c));
+          res.on('end', () => {
+            try {
+              const tags = JSON.parse(data);
+              resolve((tags.models || []).some((m) => m.name?.startsWith(MANGABA_MODEL)));
+            } catch (_) {
+              resolve(false);
+            }
+          });
+        })
+        .on('error', () => resolve(false));
     });
-    ollamaStartedByUs = true;
-    ollamaProcess.stdout?.on('data', (d) => process.stdout.write(`[ollama] ${d}`));
-    ollamaProcess.stderr?.on('data', (d) => process.stderr.write(`[ollama] ${d}`));
-    ollamaProcess.on('error', (e) =>
-      console.warn('[ollama] não foi possível iniciar (instalado?):', e.message)
-    );
-    await waitForOllama();
-    console.log('[ollama] iniciado pelo Mangaba AI');
+    if (!hasModel) {
+      console.log(`[ollama] baixando modelo ${MANGABA_MODEL}...`);
+      await ollama.pull(MANGABA_MODEL).catch((e) => console.warn('[ollama] pull falhou:', e.message));
+    }
   } catch (e) {
     console.warn('[ollama] indisponível:', e.message);
   }
 }
 
-// Encerra o Ollama apenas se fomos nós que o iniciamos
-function stopOllama() {
-  if (ollamaStartedByUs && ollamaProcess) {
-    console.log('[ollama] encerrando (iniciado pelo Mangaba AI)...');
-    try {
-      ollamaProcess.kill('SIGTERM');
-    } catch (_) {
-      /* ignore */
-    }
-    ollamaProcess = null;
-    ollamaStartedByUs = false;
-  }
-}
+const stopOllama = () => ollama.stop();
 
 function startBackend() {
   const backendDir = path.join(__dirname, '../backend');

@@ -2,23 +2,29 @@
 
 Interface de chat com IA baseada no Mangaba AI, com identidade visual Mangaba AI.
 
-## Motor de IA: Ollama + Gemma 4 edge (quantizado)
+## Motor de IA: Ollama + Gemma 4 edge (quantizado) — gestão TOTAL pelo app
 
 O Mangaba AI roda **100% local** usando o Ollama com o modelo **`gemma4:e4b`**
 (Gemma 4 edge, otimizado e quantizado para rodar on-device — ~9.6 GB). Não há
 conexões externas; todos os dados ficam na máquina.
 
-```bash
-# Instalar Ollama (Mac)
-brew install ollama
-ollama serve            # inicia o serviço
+**O Ollama é um componente interno do Mangaba AI** — instalação, ciclo de vida
+e desinstalação são controlados SOMENTE pelo app de chat
+([`electron/ollama-manager.cjs`](electron/ollama-manager.cjs)):
 
-# Baixar o modelo Gemma 4 quantizado (só na 1ª vez)
-ollama pull gemma4:e4b
-```
+| Evento | O que o app faz |
+|--------|-----------------|
+| 1ª execução | Baixa e instala o Ollama dentro de `userData/ollama` (sem instalador de sistema) |
+| Abrir o app | Inicia o serviço Ollama e garante o modelo `gemma4:e4b` baixado |
+| Fechar o app | Encerra o Ollama (se foi o app quem iniciou) |
+| Menu **Ollama → Desinstalar** | Remove o binário e TODOS os modelos |
+| Desinstalar o app | Como tudo vive em `userData/ollama`, some junto |
 
-O `start-desktop.sh` já faz isso automaticamente: sobe o Ollama e baixa o
-modelo se ainda não existir.
+> Os modelos ficam em `userData/ollama/models` (via `OLLAMA_MODELS`), então
+> não poluem uma instalação de Ollama que você já tenha no sistema, e são
+> removidos junto com o app.
+
+Não é necessário instalar o Ollama manualmente — o app cuida de tudo.
 
 ### Variantes do Gemma 4 (edite `MANGABA_MODEL` no start-desktop.sh)
 
