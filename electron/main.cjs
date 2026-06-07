@@ -9,9 +9,10 @@ const ollama = require('./ollama-manager.cjs');
 const MANGABA_MODEL = process.env.MANGABA_MODEL || 'gemma4:e4b';
 
 const BACKEND_PORT = 8888;
-const FRONTEND_PORT = process.env.NODE_ENV === 'development' ? 5173 : 8080;
+// Dev: frontend pelo Vite (5173). Produção: o backend serve o frontend (8888).
+const FRONTEND_PORT = process.env.NODE_ENV === 'development' ? 5173 : BACKEND_PORT;
 // Permite sobrescrever a URL via env (ex: MANGABA_URL=http://localhost:5173)
-const APP_URL = process.env.MANGABA_URL || `http://localhost:${FRONTEND_PORT}`;
+const APP_URL = process.env.MANGABA_URL || `http://127.0.0.1:${FRONTEND_PORT}`;
 
 let mainWindow = null;
 let tray = null;
@@ -218,14 +219,61 @@ async function startOllama() {
 
 const stopOllama = () => ollama.stop();
 
+// Resolve o Python embutido (produção: resources; dev: runtime/python).
+function resolvePython() {
+  const exe = process.platform === 'win32' ? 'python.exe' : 'bin/python3.11';
+  const candidates = [
+    path.join(process.resourcesPath || '', 'runtime', 'python', exe),
+    path.join(__dirname, '..', 'runtime', 'python', exe),
+  ];
+  for (const c of candidates) if (fs.existsSync(c)) return c;
+  return process.platform === 'win32' ? 'python' : 'python3'; // fallback sistema
+}
+
+// Resolve a pasta do backend e a raiz (para FRONTEND_BUILD_DIR/static).
+function resolvePaths() {
+  const prodBase = process.resourcesPath || '';
+  const prodBackend = path.join(prodBase, 'backend');
+  if (fs.existsSync(prodBackend)) {
+    // Em produção o frontend buildado fica em resources/build
+    return { backendDir: prodBackend, buildDir: path.join(prodBase, 'build') };
+  }
+  const devRoot = path.join(__dirname, '..');
+  return { backendDir: path.join(devRoot, 'backend'), buildDir: path.join(devRoot, 'build') };
+}
+
 function startBackend() {
-  const backendDir = path.join(__dirname, '../backend');
+  const { backendDir, buildDir } = resolvePaths();
   if (!fs.existsSync(backendDir)) return Promise.resolve();
 
-  backendProcess = spawn('python3', ['-m', 'uvicorn', 'open_webui.main:app', '--host', '0.0.0.0', '--port', String(BACKEND_PORT)], {
-    cwd: backendDir,
-    env: { ...process.env, PYTHONUNBUFFERED: '1' },
-  });
+  // Dados graváveis no userData (o bundle do app é somente-leitura)
+  const dataDir = path.join(app.getPath('userData'), 'data');
+  fs.mkdirSync(dataDir, { recursive: true });
+
+  const python = resolvePython();
+  backendProcess = spawn(
+    python,
+    ['-m', 'uvicorn', 'open_webui.main:app', '--host', '127.0.0.1', '--port', String(BACKEND_PORT)],
+    {
+      cwd: backendDir,
+      env: {
+        ...process.env,
+        PYTHONUNBUFFERED: '1',
+        PYTHONPATH: backendDir,
+        DATA_DIR: dataDir,
+        WEBUI_SECRET_KEY: process.env.WEBUI_SECRET_KEY || 'mangaba-ai-secret-key',
+        WEBUI_NAME: 'Mangaba AI',
+        FRONTEND_BUILD_DIR: buildDir,
+        RAG_EMBEDDING_ENGINE: 'ollama',
+        ENABLE_OPENAI_API: 'false',
+        ENABLE_OLLAMA_API: 'true',
+        ENABLE_DIRECT_CONNECTIONS: 'false',
+        OLLAMA_BASE_URL: ollama.OLLAMA_URL,
+        DEFAULT_MODELS: MANGABA_MODEL,
+        CORS_ALLOW_ORIGIN: '*',
+      },
+    }
+  );
 
   backendProcess.stdout?.on('data', (d) => process.stdout.write(`[backend] ${d}`));
   backendProcess.stderr?.on('data', (d) => process.stderr.write(`[backend] ${d}`));

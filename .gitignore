@@ -316,3 +316,7 @@ dist
 cypress/videos
 cypress/screenshots
 .vscode/settings.json
+
+# Python embutido e build (gerados localmente)
+/runtime
+/build

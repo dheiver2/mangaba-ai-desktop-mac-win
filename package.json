@@ -35,21 +35,18 @@
 			"output": "dist-electron"
 		},
 		"files": [
-			"build/**/*",
 			"electron/**/*",
-			"static/**/*",
-			"backend/**/*",
 			"package.json"
 		],
 		"extraResources": [
-			{
-				"from": "static",
-				"to": "static"
-			}
+			{ "from": "build", "to": "build" },
+			{ "from": "backend", "to": "backend",
+			  "filter": ["**/*", "!data/**", "!**/__pycache__/**", "!**/*.pyc"] },
+			{ "from": "runtime", "to": "runtime" }
 		],
 		"mac": {
 			"category": "public.app-category.productivity",
-			"icon": "static/mangaba-logo.svg",
+			"icon": "build/icon.icns",
 			"target": [
 				{
 					"target": "dmg",
@@ -71,7 +68,7 @@
 			"gatekeeperAssess": false
 		},
 		"win": {
-			"icon": "static/mangaba-logo.svg",
+			"icon": "build/icon.icns",
 			"target": [
 				{
 					"target": "nsis",
