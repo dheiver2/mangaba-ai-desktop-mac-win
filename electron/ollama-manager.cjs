@@ -131,12 +131,17 @@ async function install(onProgress = () => {}) {
     await download(info.url, zip);
     onProgress('Extraindo...');
     spawnSync('unzip', ['-o', zip, '-d', tmp]);
-    // Localiza o binário dentro do Ollama.app
-    const candidate = path.join(tmp, 'Ollama.app', 'Contents', 'Resources', 'ollama');
-    const alt = path.join(tmp, 'Ollama.app', 'Contents', 'MacOS', 'ollama');
-    const src = fs.existsSync(candidate) ? candidate : alt;
-    if (fs.existsSync(src)) {
-      fs.copyFileSync(src, binPath());
+    // O binário 'ollama' fica em Resources/ junto com as bibliotecas
+    // (libggml-*.dylib/.so) e subpastas (ex.: mlx_metal_v3) das quais ele
+    // DEPENDE. Copiamos a árvore inteira de Resources para bin/ (recursivo).
+    const resources = path.join(tmp, 'Ollama.app', 'Contents', 'Resources');
+    if (fs.existsSync(path.join(resources, 'ollama'))) {
+      for (const item of fs.readdirSync(resources)) {
+        if (item === 'icon.icns') continue; // ícone é dispensável
+        fs.cpSync(path.join(resources, item), path.join(binDir, item), {
+          recursive: true,
+        });
+      }
       fs.chmodSync(binPath(), 0o755);
     } else {
       throw new Error('Binário do Ollama não encontrado no pacote baixado');
