@@ -320,3 +320,4 @@ cypress/screenshots
 # Python embutido e build (gerados localmente)
 /runtime
 /build
+CHANGELOG.original.md

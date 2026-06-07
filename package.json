@@ -42,7 +42,8 @@
 			{ "from": "build", "to": "build" },
 			{ "from": "backend", "to": "backend",
 			  "filter": ["**/*", "!data/**", "!**/__pycache__/**", "!**/*.pyc"] },
-			{ "from": "runtime", "to": "runtime" }
+			{ "from": "runtime", "to": "runtime" },
+			{ "from": "CHANGELOG.md", "to": "CHANGELOG.md" }
 		],
 		"mac": {
 			"category": "public.app-category.productivity",
