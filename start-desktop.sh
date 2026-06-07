@@ -15,9 +15,23 @@ cd "$PROJ"
 
 echo "🥭 Mangaba AI — iniciando..."
 
-# Libera portas se ocupadas (8888 = backend Mangaba, 5173 = frontend)
-lsof -ti:8888 | xargs kill -9 2>/dev/null || true
-lsof -ti:5173 | xargs kill -9 2>/dev/null || true
+# Encerra instâncias anteriores do Mangaba AI antes de iniciar.
+echo "→ Limpando processos/portas anteriores..."
+
+# Mata processos remanescentes do próprio app (backend, frontend, electron, ollama)
+pkill -f "uvicorn open_webui.main:app" 2>/dev/null || true
+pkill -f "vite dev --port 5173" 2>/dev/null || true
+pkill -f "electron electron/main.cjs" 2>/dev/null || true
+# Encerra apenas o Ollama que o app possa ter deixado para trás
+pkill -f "ollama serve" 2>/dev/null || true
+
+# Libera as portas usadas pelo Mangaba AI:
+#   5173 = frontend (Vite) | 8888 = backend (FastAPI) | 11434 = Ollama
+for port in 5173 8888 11434; do
+  lsof -ti:"$port" | xargs kill -9 2>/dev/null || true
+done
+
+sleep 1  # dá tempo das portas serem liberadas pelo SO
 
 # 0) Ollama — garante apenas que o modelo está baixado.
 # O CICLO DE VIDA do Ollama (ligar ao abrir / desligar ao fechar) é controlado
