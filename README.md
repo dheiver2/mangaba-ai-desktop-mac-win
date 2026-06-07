@@ -136,6 +136,8 @@ Para regenerar os logos após editar o SVG:
 node scripts/gen-logos.js
 ```
 
+📖 **Manual de marca completo:** [docs/branding/BRANDING.md](docs/branding/BRANDING.md) — logotipo, paleta, tipografia, tom de voz e aplicações.
+
 ---
 
 ## 🛠️ Pré-requisitos
