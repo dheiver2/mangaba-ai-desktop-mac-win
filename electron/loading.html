@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mangaba AI</title>
+    <style>
+      html, body {
+        margin: 0; height: 100%;
+        background: #1a0f0a;
+        color: #FFFCF0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        display: flex; align-items: center; justify-content: center;
+        -webkit-user-select: none; user-select: none;
+      }
+      .box { text-align: center; max-width: 360px; padding: 24px; }
+      .logo {
+        width: 96px; height: 96px; border-radius: 22px;
+        margin: 0 auto 20px; display: block;
+        box-shadow: 0 8px 30px rgba(255,122,26,0.35);
+      }
+      h1 { font-size: 20px; margin: 0 0 8px; font-weight: 600; }
+      p { font-size: 13px; color: #FFDFCC; opacity: 0.8; margin: 0 0 24px; line-height: 1.5; }
+      .bar {
+        height: 6px; border-radius: 999px;
+        background: rgba(255,255,255,0.1); overflow: hidden;
+      }
+      .bar > i {
+        display: block; height: 100%; width: 40%;
+        background: linear-gradient(90deg, #FFD83D, #FF7A1A, #E94A12);
+        border-radius: 999px;
+        animation: slide 1.3s ease-in-out infinite;
+      }
+      @keyframes slide {
+        0% { margin-left: -40%; }
+        100% { margin-left: 100%; }
+      }
+      #status { margin-top: 16px; font-size: 12px; color: #FF7A1A; min-height: 16px; }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <img class="logo" src="mangaba-logo.svg" alt="Mangaba AI" />
+      <h1>Mangaba AI</h1>
+      <p>Preparando seu assistente de IA local.<br />Na primeira vez, isso pode levar alguns minutos.</p>
+      <div class="bar"><i></i></div>
+      <div id="status">Iniciando…</div>
+    </div>
+    <script>
+      // Recebe atualizações de status do processo principal
+      if (window.mangabaDesktop?.onStatus) {
+        window.mangabaDesktop.onStatus((msg) => {
+          document.getElementById('status').textContent = msg;
+        });
+      }
+    </script>
+  </body>
+</html>

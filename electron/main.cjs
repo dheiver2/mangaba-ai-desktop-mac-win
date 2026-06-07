@@ -25,7 +25,7 @@ function createWindow() {
     minWidth: 900,
     minHeight: 600,
     title: 'Mangaba AI',
-    icon: path.join(__dirname, '../static/mangaba-logo.svg'),
+    icon: path.join(__dirname, 'mangaba-logo.svg'),
     backgroundColor: '#1a0f0a',
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
     trafficLightPosition: { x: 16, y: 16 },
@@ -36,7 +36,8 @@ function createWindow() {
     },
   });
 
-  mainWindow.loadURL(APP_URL);
+  // Mostra a tela de carregamento IMEDIATAMENTE (não bloqueia a abertura)
+  mainWindow.loadFile(path.join(__dirname, 'loading.html'));
 
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
@@ -52,7 +53,7 @@ function createWindow() {
 }
 
 function createTray() {
-  const iconPath = path.join(__dirname, '../static/mangaba-logo.svg');
+  const iconPath = path.join(__dirname, 'mangaba-logo.svg');
   const icon = fs.existsSync(iconPath)
     ? nativeImage.createFromPath(iconPath).resize({ width: 16, height: 16 })
     : nativeImage.createEmpty();
@@ -281,22 +282,55 @@ function startBackend() {
   return waitForBackend();
 }
 
+// Envia mensagem de status para a tela de carregamento
+function setStatus(msg) {
+  console.log('[status]', msg);
+  try {
+    mainWindow?.webContents.send('mangaba-status', msg);
+  } catch (_) {}
+}
+
+// Aguarda o backend responder e então carrega o app na janela.
+function waitBackendAndLoad(retries = 600) {
+  const tick = () => {
+    http
+      .get(`http://127.0.0.1:${BACKEND_PORT}/health`, () => {
+        setStatus('Pronto!');
+        mainWindow?.loadURL(APP_URL);
+      })
+      .on('error', () => {
+        if (retries-- > 0) setTimeout(tick, 1000);
+        else setStatus('Falha ao iniciar o servidor. Reabra o app.');
+      });
+  };
+  tick();
+}
+
 app.whenReady().then(async () => {
   buildAppMenu();
 
-  // O software de chat comanda o Ollama: liga ao abrir
-  await startOllama();
-
-  if (process.env.NODE_ENV !== 'development') {
-    try {
-      await startBackend();
-    } catch (e) {
-      console.warn('Backend não disponível, tentando continuar...', e.message);
-    }
-  }
-
+  // 1) Abre a janela JÁ com a tela de carregamento (não trava o app)
   createWindow();
   createTray();
+
+  // 2) Trabalho pesado em segundo plano (não bloqueia a UI)
+  (async () => {
+    setStatus('Preparando o motor de IA (Ollama)…');
+    startOllama(); // baixa/instala/pull em background; não aguardamos aqui
+
+    if (process.env.NODE_ENV !== 'development') {
+      setStatus('Iniciando o servidor…');
+      try {
+        startBackend();
+      } catch (e) {
+        console.warn('Backend não disponível:', e.message);
+      }
+      waitBackendAndLoad();
+    } else {
+      // Em dev o frontend (Vite) já está no ar
+      waitBackendAndLoad();
+    }
+  })();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
