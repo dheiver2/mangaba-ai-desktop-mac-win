@@ -4,6 +4,8 @@
   # Manual de Marca — Mangaba AI
 
   <sub>Guia de identidade visual e verbal · v1.0</sub>
+
+  📄 **[Baixar em PDF](Mangaba-AI-Manual-de-Marca.pdf)**
 </div>
 
 ---
