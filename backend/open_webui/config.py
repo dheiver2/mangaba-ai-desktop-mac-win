@@ -2515,8 +2515,8 @@ DEFAULT_LOCALE = ConfigVar(
     os.getenv('DEFAULT_LOCALE', 'pt-BR'),
 )
 
-# Mangaba AI usa o Gemma 4 edge (quantizado, on-device) via Ollama por padrão
-DEFAULT_MODELS = ConfigVar('DEFAULT_MODELS', 'ui.default_models', os.getenv('DEFAULT_MODELS', 'gemma4:e4b'))
+# Mangaba AI usa o modelo Mangaba Gemma 4 (Gemma 4 edge + persona) via Ollama
+DEFAULT_MODELS = ConfigVar('DEFAULT_MODELS', 'ui.default_models', os.getenv('DEFAULT_MODELS', 'mangaba-gemma4:latest'))
 
 DEFAULT_PINNED_MODELS = ConfigVar(
     'DEFAULT_PINNED_MODELS',

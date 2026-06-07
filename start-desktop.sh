@@ -7,9 +7,9 @@ NODE_BIN="/Users/dheiver/.nvm/versions/node/v20.20.2/bin"
 PYENV="$HOME/.pyenv/bin/pyenv"
 export PATH="$NODE_BIN:$PATH"
 
-# Modelo padrão: Gemma 4 edge quantizado (on-device) via Ollama
-# Variantes: gemma4:e2b (7.2GB, mais leve) | gemma4:e4b (9.6GB, equilíbrio)
-MANGABA_MODEL="gemma4:e4b"
+# Modelo base (Gemma 4 edge quantizado) e o modelo rebrandizado Mangaba Gemma 4
+BASE_MODEL="gemma4:e4b"
+MANGABA_MODEL="mangaba-gemma4:latest"
 
 cd "$PROJ"
 
@@ -39,22 +39,24 @@ sleep 1  # dá tempo das portas serem liberadas pelo SO
 # 'ollama serve' rodando: se precisarmos baixar o modelo, subimos um serve
 # TEMPORÁRIO e o encerramos em seguida, deixando o app ser o dono do Ollama.
 if command -v ollama >/dev/null 2>&1; then
-  if ! ollama list 2>/dev/null | grep -q "$MANGABA_MODEL"; then
-    echo "→ Modelo $MANGABA_MODEL ausente. Baixando (só na 1ª vez)..."
+  if ! ollama list 2>/dev/null | grep -q "mangaba-gemma4"; then
+    echo "→ Preparando o modelo Mangaba Gemma 4 (só na 1ª vez)..."
     TEMP_OLLAMA=""
     if ! curl -s -o /dev/null http://127.0.0.1:11434/api/tags 2>/dev/null; then
       ollama serve > /tmp/mangaba-ollama.log 2>&1 &
       TEMP_OLLAMA=$!
       until curl -s -o /dev/null http://127.0.0.1:11434/api/tags 2>/dev/null; do sleep 1; done
     fi
-    ollama pull "$MANGABA_MODEL"
+    # Baixa o modelo base e cria o modelo Mangaba (com a persona sergipana)
+    ollama list 2>/dev/null | grep -q "$BASE_MODEL" || ollama pull "$BASE_MODEL"
+    ollama create mangaba-gemma4 -f "$PROJ/Modelfile.mangaba"
     # Encerra o serve temporário — o app vai iniciar o seu próprio
     [ -n "$TEMP_OLLAMA" ] && kill "$TEMP_OLLAMA" 2>/dev/null || true
   fi
-  echo "✓ Modelo $MANGABA_MODEL disponível (o app gerencia o Ollama)"
+  echo "✓ Modelo Mangaba Gemma 4 disponível (o app gerencia o Ollama)"
 else
   echo "⚠️  Ollama não instalado. Instale com: brew install ollama"
-  echo "    Depois rode: ollama pull $MANGABA_MODEL"
+  echo "    Depois rode: ollama pull $BASE_MODEL && ollama create mangaba-gemma4 -f Modelfile.mangaba"
 fi
 
 # 1) Backend (API) — porta 8888, rodando NOSSO backend rebrandizado

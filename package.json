@@ -43,7 +43,8 @@
 			{ "from": "backend", "to": "backend",
 			  "filter": ["**/*", "!data/**", "!**/__pycache__/**", "!**/*.pyc"] },
 			{ "from": "runtime", "to": "runtime" },
-			{ "from": "CHANGELOG.md", "to": "CHANGELOG.md" }
+			{ "from": "CHANGELOG.md", "to": "CHANGELOG.md" },
+			{ "from": "Modelfile.mangaba", "to": "Modelfile.mangaba" }
 		],
 		"mac": {
 			"category": "public.app-category.productivity",

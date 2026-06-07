@@ -5,8 +5,9 @@ const http = require('http');
 const fs = require('fs');
 const ollama = require('./ollama-manager.cjs');
 
-// Modelo padrão do Mangaba AI (Gemma 4 edge quantizado)
-const MANGABA_MODEL = process.env.MANGABA_MODEL || 'gemma4:e4b';
+// Modelo base (Gemma 4 edge quantizado) e o modelo rebrandizado do Mangaba AI.
+const BASE_MODEL = process.env.MANGABA_BASE_MODEL || 'gemma4:e4b';
+const MANGABA_MODEL = process.env.MANGABA_MODEL || 'mangaba-gemma4:latest';
 
 const BACKEND_PORT = 8888;
 // Dev: frontend pelo Vite (5173). Produção: o backend serve o frontend (8888).
@@ -130,12 +131,13 @@ function buildAppMenu() {
       label: 'Ollama',
       submenu: [
         {
-          label: `Baixar/atualizar modelo (${MANGABA_MODEL})`,
+          label: 'Atualizar modelo Mangaba Gemma 4',
           click: async () => {
             try {
-              await ollama.pull(MANGABA_MODEL);
+              await ollama.pull(BASE_MODEL);
+              await ollama.createModel('mangaba-gemma4', resolveModelfile());
             } catch (e) {
-              console.warn('[ollama] pull falhou:', e.message);
+              console.warn('[ollama] atualização falhou:', e.message);
             }
           },
         },
@@ -188,30 +190,34 @@ function waitForBackend(retries = 30, delay = 1000) {
   });
 }
 
-// Inicia o Ollama gerenciado pelo app (instala na 1ª vez) e garante o modelo.
+// Caminho do Modelfile (produção: resources; dev: raiz do projeto)
+function resolveModelfile() {
+  const candidates = [
+    path.join(process.resourcesPath || '', 'Modelfile.mangaba'),
+    path.join(__dirname, '..', 'Modelfile.mangaba'),
+  ];
+  return candidates.find((c) => fs.existsSync(c)) || candidates[1];
+}
+
+// Inicia o Ollama, baixa o modelo base e cria o modelo Mangaba (com a persona).
 async function startOllama() {
   try {
-    await ollama.start((msg) => console.log('[ollama]', msg));
-    // Garante que o modelo padrão está disponível
-    const hasModel = await new Promise((resolve) => {
-      http
-        .get(`${ollama.OLLAMA_URL}/api/tags`, (res) => {
-          let data = '';
-          res.on('data', (c) => (data += c));
-          res.on('end', () => {
-            try {
-              const tags = JSON.parse(data);
-              resolve((tags.models || []).some((m) => m.name?.startsWith(MANGABA_MODEL)));
-            } catch (_) {
-              resolve(false);
-            }
-          });
-        })
-        .on('error', () => resolve(false));
-    });
-    if (!hasModel) {
-      console.log(`[ollama] baixando modelo ${MANGABA_MODEL}...`);
-      await ollama.pull(MANGABA_MODEL).catch((e) => console.warn('[ollama] pull falhou:', e.message));
+    await ollama.start((msg) => setStatus(msg));
+    const models = await ollama.listModels();
+
+    // 1) Garante o modelo BASE (gemma4:e4b) baixado
+    if (!models.some((m) => m?.startsWith(BASE_MODEL))) {
+      setStatus(`Baixando modelo base (${BASE_MODEL})…`);
+      await ollama.pull(BASE_MODEL).catch((e) => console.warn('[ollama] pull base falhou:', e.message));
+    }
+
+    // 2) Cria o modelo MANGABA (com a identidade sergipana) a partir do base
+    const after = await ollama.listModels();
+    if (!after.some((m) => m === MANGABA_MODEL || m?.startsWith('mangaba-gemma4'))) {
+      setStatus('Criando a identidade Mangaba…');
+      await ollama
+        .createModel('mangaba-gemma4', resolveModelfile())
+        .catch((e) => console.warn('[ollama] create Mangaba falhou:', e.message));
     }
   } catch (e) {
     console.warn('[ollama] indisponível:', e.message);

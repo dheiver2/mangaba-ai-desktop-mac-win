@@ -209,6 +209,41 @@ function pull(model) {
   });
 }
 
+// Cria o modelo rebrandizado (ex.: mangaba-gemma4) a partir de um Modelfile,
+// com a persona embutida. O Modelfile referencia o modelo base (gemma4:e4b).
+function createModel(modelName, modelfilePath) {
+  return new Promise((resolve, reject) => {
+    const bin = resolveBinary();
+    if (!bin) return reject(new Error('Ollama não instalado'));
+    if (!fs.existsSync(modelfilePath)) return reject(new Error('Modelfile não encontrado: ' + modelfilePath));
+    const p = spawn(bin, ['create', modelName, '-f', modelfilePath], {
+      env: { ...process.env, OLLAMA_HOST: `127.0.0.1:${OLLAMA_PORT}`, OLLAMA_MODELS: modelsDir() },
+    });
+    p.stdout?.on('data', (d) => process.stdout.write(`[ollama create] ${d}`));
+    p.stderr?.on('data', (d) => process.stderr.write(`[ollama create] ${d}`));
+    p.on('close', (code) => (code === 0 ? resolve() : reject(new Error(`create saiu com código ${code}`))));
+  });
+}
+
+// Lista os modelos instalados (nomes).
+function listModels() {
+  return new Promise((resolve) => {
+    http
+      .get(`${OLLAMA_URL}/api/tags`, (res) => {
+        let data = '';
+        res.on('data', (c) => (data += c));
+        res.on('end', () => {
+          try {
+            resolve((JSON.parse(data).models || []).map((m) => m.name));
+          } catch (_) {
+            resolve([]);
+          }
+        });
+      })
+      .on('error', () => resolve([]));
+  });
+}
+
 // Encerra o serviço — apenas se fomos nós que o iniciamos.
 function stop() {
   if (startedByUs && serveProcess) {
@@ -241,6 +276,8 @@ module.exports = {
   start,
   stop,
   pull,
+  createModel,
+  listModels,
   uninstall,
   ollamaHome,
 };
