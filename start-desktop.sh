@@ -70,6 +70,7 @@ ENABLE_OPENAI_API=false \
 ENABLE_DIRECT_CONNECTIONS=false \
 OLLAMA_BASE_URL="http://127.0.0.1:11434" \
 DEFAULT_MODELS="$MANGABA_MODEL" \
+FRONTEND_BUILD_DIR="$PROJ" \
 PYTHONPATH="$PROJ/backend" \
 PYENV_VERSION=3.11.9 "$PYENV" exec python -m uvicorn open_webui.main:app --host 0.0.0.0 --port 8888 > /tmp/mangaba-backend.log 2>&1 &
 BACKEND_PID=$!

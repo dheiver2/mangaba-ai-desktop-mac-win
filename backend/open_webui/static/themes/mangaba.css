@@ -1,0 +1,57 @@
+/* Mangaba AI Theme — Identidade Visual Oficial */
+/* Cores: Laranja #FF7A1A, Vermelho-Laranja #E94A12, Verde #689924, Creme #FFFCF0, Marrom #403731 */
+
+:root {
+  --mangaba-primary: #FF7A1A;
+  --mangaba-accent: #E94A12;
+  --mangaba-green: #689924;
+  --mangaba-green-light: #7BBF26;
+  --mangaba-cream: #FFFCF0;
+  --mangaba-peach: #FFDFCC;
+  --mangaba-dark: #403731;
+  --mangaba-yellow: #FFD83D;
+}
+
+.mangaba * {
+  --tw-ring-color: #FF7A1A33;
+}
+
+.mangaba .app > * {
+  background-color: #1a0f0a !important;
+}
+
+.mangaba #nav {
+  background-color: #110b07;
+}
+
+.mangaba .py-2\.5.my-auto.flex.flex-col.justify-between.h-screen {
+  background: #110b07;
+}
+
+.mangaba #chat-input {
+  background: #2a1810;
+  border: 1px solid #FF7A1A44;
+  margin: 0.3rem;
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+}
+
+.mangaba button:focus,
+.mangaba input:focus,
+.mangaba textarea:focus {
+  outline-color: #FF7A1A !important;
+  border-color: #FF7A1A !important;
+}
+
+/* Tema claro Mangaba */
+.mangaba-light .app > * {
+  background-color: #FFFCF0 !important;
+}
+
+.mangaba-light #nav {
+  background-color: #FFF8EE;
+}
+
+.mangaba-light .py-2\.5.my-auto.flex.flex-col.justify-between.h-screen {
+  background: #FFF0DC;
+}

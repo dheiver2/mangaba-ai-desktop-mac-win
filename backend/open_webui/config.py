@@ -2532,31 +2532,31 @@ except Exception as e:
 if default_prompt_suggestions == []:
     default_prompt_suggestions = [
         {
-            'title': ['Help me study', 'vocabulary for a college entrance exam'],
-            'content': "Help me study vocabulary: write a sentence for me to fill in the blank, and I'll try to pick the correct option.",
+            'title': ['Me ajude a estudar', 'vocabulário para o vestibular'],
+            'content': 'Me ajude a estudar vocabulário: escreva uma frase com uma lacuna para eu preencher, e eu tento escolher a opção correta.',
         },
         {
-            'title': ['Give me ideas', "for what to do with my kids' art"],
-            'content': "What are 5 creative things I could do with my kids' art? I don't want to throw them away, but it's also so much clutter.",
+            'title': ['Me dê ideias', 'do que fazer com os desenhos das crianças'],
+            'content': 'Quais são 5 coisas criativas que eu poderia fazer com os desenhos dos meus filhos? Não quero jogá-los fora, mas também acumulam bastante.',
         },
         {
-            'title': ['Tell me a fun fact', 'about the Roman Empire'],
-            'content': 'Tell me a random fun fact about the Roman Empire',
+            'title': ['Me conte uma curiosidade', 'sobre o Império Romano'],
+            'content': 'Me conte uma curiosidade aleatória sobre o Império Romano.',
         },
         {
-            'title': ['Show me a code snippet', "of a website's sticky header"],
-            'content': "Show me a code snippet of a website's sticky header in CSS and JavaScript.",
+            'title': ['Mostre um trecho de código', 'de um cabeçalho fixo de site'],
+            'content': 'Mostre um trecho de código de um cabeçalho fixo (sticky header) de site em CSS e JavaScript.',
         },
         {
             'title': [
-                'Explain options trading',
-                "if I'm familiar with buying and selling stocks",
+                'Explique opções (derivativos)',
+                'considerando que já compro e vendo ações',
             ],
-            'content': "Explain options trading in simple terms if I'm familiar with buying and selling stocks.",
+            'content': 'Explique o mercado de opções em termos simples, considerando que já estou familiarizado com comprar e vender ações.',
         },
         {
-            'title': ['Overcome procrastination', 'give me tips'],
-            'content': 'Could you start by asking me about instances when I procrastinate the most and then give me some suggestions to overcome it?',
+            'title': ['Vencer a procrastinação', 'me dê dicas'],
+            'content': 'Você pode começar me perguntando sobre as situações em que mais procrastino e depois me dar algumas sugestões para superar isso?',
         },
     ]
 
