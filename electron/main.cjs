@@ -12,6 +12,11 @@ const APP_URL = process.env.MANGABA_URL || `http://localhost:${FRONTEND_PORT}`;
 let mainWindow = null;
 let tray = null;
 let backendProcess = null;
+let ollamaProcess = null;
+let ollamaStartedByUs = false; // só encerramos o Ollama se fomos nós que o iniciamos
+
+const OLLAMA_PORT = 11434;
+const OLLAMA_URL = `http://127.0.0.1:${OLLAMA_PORT}`;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -142,6 +147,65 @@ function waitForBackend(retries = 30, delay = 1000) {
   });
 }
 
+// Verifica se o Ollama já está respondendo
+function isOllamaUp() {
+  return new Promise((resolve) => {
+    http
+      .get(`${OLLAMA_URL}/api/tags`, () => resolve(true))
+      .on('error', () => resolve(false));
+  });
+}
+
+// Aguarda o Ollama subir (até retries tentativas)
+function waitForOllama(retries = 30, delay = 1000) {
+  return new Promise((resolve, reject) => {
+    const attempt = async () => {
+      if (await isOllamaUp()) return resolve();
+      if (retries-- > 0) setTimeout(attempt, delay);
+      else reject(new Error('Ollama não iniciou no tempo esperado'));
+    };
+    attempt();
+  });
+}
+
+// Inicia o Ollama caso ainda não esteja rodando — o app passa a ser o dono dele
+async function startOllama() {
+  if (await isOllamaUp()) {
+    console.log('[ollama] já estava rodando — não será encerrado ao sair');
+    return;
+  }
+  try {
+    ollamaProcess = spawn('ollama', ['serve'], {
+      env: { ...process.env },
+      detached: false,
+    });
+    ollamaStartedByUs = true;
+    ollamaProcess.stdout?.on('data', (d) => process.stdout.write(`[ollama] ${d}`));
+    ollamaProcess.stderr?.on('data', (d) => process.stderr.write(`[ollama] ${d}`));
+    ollamaProcess.on('error', (e) =>
+      console.warn('[ollama] não foi possível iniciar (instalado?):', e.message)
+    );
+    await waitForOllama();
+    console.log('[ollama] iniciado pelo Mangaba AI');
+  } catch (e) {
+    console.warn('[ollama] indisponível:', e.message);
+  }
+}
+
+// Encerra o Ollama apenas se fomos nós que o iniciamos
+function stopOllama() {
+  if (ollamaStartedByUs && ollamaProcess) {
+    console.log('[ollama] encerrando (iniciado pelo Mangaba AI)...');
+    try {
+      ollamaProcess.kill('SIGTERM');
+    } catch (_) {
+      /* ignore */
+    }
+    ollamaProcess = null;
+    ollamaStartedByUs = false;
+  }
+}
+
 function startBackend() {
   const backendDir = path.join(__dirname, '../backend');
   if (!fs.existsSync(backendDir)) return Promise.resolve();
@@ -159,6 +223,9 @@ function startBackend() {
 
 app.whenReady().then(async () => {
   buildAppMenu();
+
+  // O software de chat comanda o Ollama: liga ao abrir
+  await startOllama();
 
   if (process.env.NODE_ENV !== 'development') {
     try {
@@ -186,6 +253,12 @@ app.on('before-quit', () => {
   if (backendProcess) {
     backendProcess.kill();
   }
+  // O software de chat comanda o Ollama: desliga ao fechar
+  stopOllama();
 });
+
+// Garante o encerramento do Ollama mesmo em saídas inesperadas
+app.on('will-quit', stopOllama);
+process.on('exit', stopOllama);
 
 ipcMain.handle('app-version', () => app.getVersion());

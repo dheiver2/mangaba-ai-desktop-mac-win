@@ -19,18 +19,25 @@ echo "🥭 Mangaba AI — iniciando..."
 lsof -ti:8888 | xargs kill -9 2>/dev/null || true
 lsof -ti:5173 | xargs kill -9 2>/dev/null || true
 
-# 0) Ollama — garante serviço rodando e o modelo Gemma quantizado baixado
+# 0) Ollama — garante apenas que o modelo está baixado.
+# O CICLO DE VIDA do Ollama (ligar ao abrir / desligar ao fechar) é controlado
+# pelo PRÓPRIO app de chat (electron/main.cjs). Por isso aqui NÃO deixamos um
+# 'ollama serve' rodando: se precisarmos baixar o modelo, subimos um serve
+# TEMPORÁRIO e o encerramos em seguida, deixando o app ser o dono do Ollama.
 if command -v ollama >/dev/null 2>&1; then
-  if ! curl -s -o /dev/null http://127.0.0.1:11434/api/tags 2>/dev/null; then
-    echo "→ Iniciando serviço Ollama..."
-    ollama serve > /tmp/mangaba-ollama.log 2>&1 &
-    until curl -s -o /dev/null http://127.0.0.1:11434/api/tags 2>/dev/null; do sleep 1; done
-  fi
   if ! ollama list 2>/dev/null | grep -q "$MANGABA_MODEL"; then
-    echo "→ Baixando modelo $MANGABA_MODEL (quantizado, ~3GB, só na 1ª vez)..."
+    echo "→ Modelo $MANGABA_MODEL ausente. Baixando (só na 1ª vez)..."
+    TEMP_OLLAMA=""
+    if ! curl -s -o /dev/null http://127.0.0.1:11434/api/tags 2>/dev/null; then
+      ollama serve > /tmp/mangaba-ollama.log 2>&1 &
+      TEMP_OLLAMA=$!
+      until curl -s -o /dev/null http://127.0.0.1:11434/api/tags 2>/dev/null; do sleep 1; done
+    fi
     ollama pull "$MANGABA_MODEL"
+    # Encerra o serve temporário — o app vai iniciar o seu próprio
+    [ -n "$TEMP_OLLAMA" ] && kill "$TEMP_OLLAMA" 2>/dev/null || true
   fi
-  echo "✓ Ollama pronto com $MANGABA_MODEL"
+  echo "✓ Modelo $MANGABA_MODEL disponível (o app gerencia o Ollama)"
 else
   echo "⚠️  Ollama não instalado. Instale com: brew install ollama"
   echo "    Depois rode: ollama pull $MANGABA_MODEL"
