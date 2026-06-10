@@ -1487,11 +1487,34 @@ if audit_level != AuditLevel.NONE:
 async def get_models(request: Request, refresh: bool = False, user=Depends(get_verified_user)):
     all_models = await get_all_models(request, refresh=refresh, user=user)
 
+    # Branding Mangaba: nomes técnicos -> nomes de marca na interface
+    MANGABA_MODEL_NAMES = {
+        'mangaba-gemma4': 'Mangaba Gemma 4',
+        'mangaba-gemma4:latest': 'Mangaba Gemma 4',
+    }
+    # Modelos base ocultos quando a versão Mangaba correspondente existe
+    mangaba_ids = {m.get('id', '') for m in all_models if (m.get('id') or '').startswith('mangaba')}
+    HIDE_BASE_PREFIXES = ('gemma4:', 'gemma4') if mangaba_ids else ()
+
     models = []
     for model in all_models:
         # Filter out filter pipelines
         if 'pipeline' in model and model['pipeline'].get('type', None) == 'filter':
             continue
+
+        model_id = model.get('id', '') or ''
+
+        # Oculta o modelo base técnico (a versão Mangaba o substitui na UI)
+        if HIDE_BASE_PREFIXES and model_id.startswith(HIDE_BASE_PREFIXES):
+            continue
+
+        # Aplica o nome de marca Mangaba
+        if model_id in MANGABA_MODEL_NAMES:
+            model['name'] = MANGABA_MODEL_NAMES[model_id]
+        elif model_id.startswith('mangaba'):
+            # fallback: mangaba-xyz -> "Mangaba Xyz"
+            base = model_id.split(':')[0].replace('mangaba-', '').replace('-', ' ').title()
+            model['name'] = f'Mangaba {base}'.strip()
 
         # Remove profile image URL to reduce payload size
         if model.get('info', {}).get('meta', {}).get('profile_image_url'):
