@@ -1504,7 +1504,9 @@ async def get_models(request: Request, refresh: bool = False, user=Depends(get_v
 
         model_id = model.get('id', '') or ''
 
-        # Oculta o modelo base técnico (a versão Mangaba o substitui na UI)
+        # Oculta modelos sem branding Mangaba: arena interno e base técnico
+        if model.get('arena') or model_id.startswith('arena'):
+            continue
         if HIDE_BASE_PREFIXES and model_id.startswith(HIDE_BASE_PREFIXES):
             continue
 
@@ -1515,6 +1517,9 @@ async def get_models(request: Request, refresh: bool = False, user=Depends(get_v
             # fallback: mangaba-xyz -> "Mangaba Xyz"
             base = model_id.split(':')[0].replace('mangaba-', '').replace('-', ' ').title()
             model['name'] = f'Mangaba {base}'.strip()
+        elif model_id.startswith('gemma4'):
+            # sem versão Mangaba ainda (1ª instalação): exibe o base já com a marca
+            model['name'] = 'Mangaba Gemma 4'
 
         # Remove profile image URL to reduce payload size
         if model.get('info', {}).get('meta', {}).get('profile_image_url'):

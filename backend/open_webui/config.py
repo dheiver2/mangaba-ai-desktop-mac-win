@@ -2947,7 +2947,8 @@ ENABLE_USER_STATUS = ConfigVar(
 ENABLE_EVALUATION_ARENA_MODELS = ConfigVar(
     'ENABLE_EVALUATION_ARENA_MODELS',
     'evaluation.arena.enable',
-    os.getenv('ENABLE_EVALUATION_ARENA_MODELS', 'True').lower() == 'true',
+    # Mangaba AI: oculta o 'Arena Model' — só modelos com branding Mangaba na UI
+    os.getenv('ENABLE_EVALUATION_ARENA_MODELS', 'False').lower() == 'true',
 )
 EVALUATION_ARENA_MODELS = ConfigVar(
     'EVALUATION_ARENA_MODELS',
