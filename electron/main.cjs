@@ -27,9 +27,9 @@ function createWindow() {
     minHeight: 600,
     title: 'Mangaba AI',
     icon: path.join(__dirname, 'mangaba-logo.svg'),
-    backgroundColor: '#1a0f0a',
-    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
-    trafficLightPosition: { x: 16, y: 16 },
+    backgroundColor: '#FFFCF0',
+    // Barra de título nativa: evita os semáforos do macOS sobreporem a UI
+    titleBarStyle: 'default',
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
