@@ -116,11 +116,11 @@ npm run tauri build
 
 | Token            | Valor     | Uso                        |
 |------------------|-----------|----------------------------|
-| `--mangaba-primary` | `#FF7A1A` | Botões, destaques          |
-| `--mangaba-accent`  | `#E94A12` | Hover, alertas             |
+| `--mangaba-primary` | `#FF9C24` | Botões, destaques          |
+| `--mangaba-accent`  | `#F97518` | Hover, alertas             |
 | `--mangaba-green`   | `#689924` | Sucesso, tags              |
-| `--mangaba-cream`   | `#FFFCF0` | Fundo claro                |
-| `--mangaba-dark`    | `#403731` | Texto principal            |
+| `--mangaba-cream`   | `#FFF8F5` | Fundo claro                |
+| `--mangaba-dark`    | `#1E0D01` | Texto principal            |
 
 Tema disponível em `static/themes/mangaba.css`.
 

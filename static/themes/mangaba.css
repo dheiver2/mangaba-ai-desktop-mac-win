@@ -1,19 +1,19 @@
 /* Mangaba AI Theme — Identidade Visual Oficial */
-/* Cores: Laranja #FF7A1A, Vermelho-Laranja #E94A12, Verde #689924, Creme #FFFCF0, Marrom #403731 */
+/* Cores: Laranja #FF9C24, Vermelho-Laranja #F97518, Verde #689924, Creme #FFF8F5, Marrom #1E0D01 */
 
 :root {
-  --mangaba-primary: #FF7A1A;
-  --mangaba-accent: #E94A12;
+  --mangaba-primary: #FF9C24;
+  --mangaba-accent: #F97518;
   --mangaba-green: #689924;
   --mangaba-green-light: #7BBF26;
-  --mangaba-cream: #FFFCF0;
-  --mangaba-peach: #FFDFCC;
-  --mangaba-dark: #403731;
+  --mangaba-cream: #FFF8F5;
+  --mangaba-peach: #FFDAC2;
+  --mangaba-dark: #1E0D01;
   --mangaba-yellow: #FFD83D;
 }
 
 .mangaba * {
-  --tw-ring-color: #FF7A1A33;
+  --tw-ring-color: #FF9C2433;
 }
 
 .mangaba .app > * {
@@ -30,7 +30,7 @@
 
 .mangaba #chat-input {
   background: #2a1810;
-  border: 1px solid #FF7A1A44;
+  border: 1px solid #FF9C2444;
   margin: 0.3rem;
   padding: 0.5rem;
   border-radius: 0.75rem;
@@ -39,13 +39,13 @@
 .mangaba button:focus,
 .mangaba input:focus,
 .mangaba textarea:focus {
-  outline-color: #FF7A1A !important;
-  border-color: #FF7A1A !important;
+  outline-color: #FF9C24 !important;
+  border-color: #FF9C24 !important;
 }
 
 /* Tema claro Mangaba */
 .mangaba-light .app > * {
-  background-color: #FFFCF0 !important;
+  background-color: #FFF8F5 !important;
 }
 
 .mangaba-light #nav {

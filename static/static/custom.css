@@ -4,10 +4,10 @@
    ========================================================================== */
 
 :root {
-  --mangaba-primary: #FF7A1A;
-  --mangaba-primary-hover: #E94A12;
+  --mangaba-primary: #FF9C24;
+  --mangaba-primary-hover: #F97518;
   --mangaba-green: #689924;
-  --mangaba-cream: #FFFCF0;
+  --mangaba-cream: #FFF8F5;
   --mangaba-ink: #2B211B;
 }
 
@@ -46,7 +46,7 @@ button.bg-gray-900,
 button[type="submit"].bg-black {
   background: var(--mangaba-primary) !important;
   color: #fff !important;
-  box-shadow: 0 1px 2px rgba(233,74,18,0.25), 0 4px 14px rgba(255,122,26,0.18);
+  box-shadow: 0 1px 2px rgba(249,117,24,0.25), 0 4px 14px rgba(255,122,26,0.18);
   transition: background .18s ease, transform .12s ease, box-shadow .18s ease;
 }
 button.bg-black:hover,

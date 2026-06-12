@@ -63,8 +63,8 @@ Cores extraídas diretamente do logotipo oficial.
 ### Cores primárias
 | Cor | Hex | Uso |
 |---|---|---|
-| 🟠 **Laranja Mangaba** | `#FF7A1A` | Cor principal — botões, destaques, links |
-| 🔴 **Laranja-vermelho** | `#E94A12` | Hover, alertas, estados ativos |
+| 🟠 **Laranja Mangaba** | `#FF9C24` | Cor principal — botões, destaques, links |
+| 🔴 **Laranja-vermelho** | `#F97518` | Hover, alertas, estados ativos |
 
 ### Cores de apoio
 | Cor | Hex | Uso |
@@ -76,25 +76,25 @@ Cores extraídas diretamente do logotipo oficial.
 ### Neutros
 | Cor | Hex | Uso |
 |---|---|---|
-| 🤍 **Creme** | `#FFFCF0` | Fundo claro principal |
-| 🟫 **Pêssego** | `#FFDFCC` | Fundo secundário, gradiente |
+| 🤍 **Creme** | `#FFF8F5` | Fundo claro principal |
+| 🟫 **Pêssego** | `#FFDAC2` | Fundo secundário, gradiente |
 | ⬛ **Marrom escuro** | `#1A0F0A` | Fundo do tema escuro |
-| ⬛ **Marrom tinta** | `#403731` | Texto principal |
+| ⬛ **Marrom tinta** | `#1E0D01` | Texto principal |
 
 ### Gradiente do fruto (símbolo)
-`#FFD83D` (amarelo) → `#FF7A1A` (laranja) → `#7BBF26` (verde)
+`#FFD83D` (amarelo) → `#FF9C24` (laranja) → `#7BBF26` (verde)
 
 ### Tokens CSS (em `static/themes/mangaba.css`)
 ```css
---mangaba-primary:      #FF7A1A;
---mangaba-primary-hover:#E94A12;
+--mangaba-primary:      #FF9C24;
+--mangaba-primary-hover:#F97518;
 --mangaba-green:        #689924;
 --mangaba-green-light:  #7BBF26;
 --mangaba-yellow:       #FFD83D;
---mangaba-cream:        #FFFCF0;
---mangaba-peach:        #FFDFCC;
+--mangaba-cream:        #FFF8F5;
+--mangaba-peach:        #FFDAC2;
 --mangaba-dark:         #1A0F0A;
---mangaba-ink:          #403731;
+--mangaba-ink:          #1E0D01;
 ```
 
 ---
